@@ -6,7 +6,7 @@ import Consts from "./Consts"
 
 export default {
     computed: {
-        ...mapState(["bookName", "viewMode"])
+        ...mapState(["bookName", "viewMode", "currentBookId"])
     },
     data: function () {
         return {
@@ -50,16 +50,18 @@ export default {
                     });
                     this.calculation = response.data.data.calculation;
                     this.loading = false;
+                    this.CHANGE_CURRENT_BOOK({ currentBookId: response.data.data.id });
                 },
                 () => {
                     this.$alert("无法读取账本数据", "数据请求失败");
                     this.CHANGE_BOOK_NAME({ bookName: Consts.appName });
                     this.loading = true;
                     this.loadingText = "账本数据加载失败";
+                    this.CHANGE_CURRENT_BOOK({ currentBookId: "" });
                 }
             );
         },
-        ...mapActions([Types.CHANGE_BOOK_NAME, Types.CHANGE_VIEW_MODE])
+        ...mapActions([Types.CHANGE_BOOK_NAME, Types.CHANGE_VIEW_MODE, Types.CHANGE_CURRENT_BOOK])
     }, mounted: function () {
         this.initialize(this.$route.params.url);
     },

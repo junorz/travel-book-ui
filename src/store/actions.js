@@ -7,5 +7,9 @@ export default {
 
     [Types.CHANGE_VIEW_MODE]: ({ commit }, payload) => {
         commit(Types.CHANGE_VIEW_MODE, payload);
+    },
+
+    [Types.CHANGE_CURRENT_BOOK]: ({ commit }, payload) => {
+        commit(Types.CHANGE_CURRENT_BOOK, payload);
     }
 }

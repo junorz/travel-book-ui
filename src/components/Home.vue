@@ -118,7 +118,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["bookName", "viewMode"])
+    ...mapState(["bookName", "viewMode", "currentBookId"])
   },
   methods: {
     openCreateDialog: function() {
@@ -203,7 +203,11 @@ export default {
 
       return result;
     },
-    ...mapActions([Types.CHANGE_BOOK_NAME, Types.CHANGE_VIEW_MODE])
+    ...mapActions([
+      Types.CHANGE_BOOK_NAME,
+      Types.CHANGE_VIEW_MODE,
+      Types.CHANGE_CURRENT_BOOK
+    ])
   },
   created: function() {
     get(
@@ -240,6 +244,7 @@ export default {
   mounted: function() {
     this.CHANGE_VIEW_MODE({ viewMode: false });
     this.CHANGE_BOOK_NAME({ bookName: Consts.appName });
+    this.CHANGE_CURRENT_BOOK({ currentBookId: "" });
   }
 };
 </script>
