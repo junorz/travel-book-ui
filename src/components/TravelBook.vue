@@ -44,8 +44,8 @@
     </el-row>
     <el-table :data="detailList" stripe border style="width: 100%" size="medium" ref="dataTable">
       <el-table-column prop="dateTime" label="日期" min-width="90"></el-table-column>
+      <el-table-column prop="amount" label="金额" min-width="100"></el-table-column>
       <el-table-column prop="remarks" label="消费明细" min-width="150"></el-table-column>
-      <el-table-column prop="amount" label="金额"></el-table-column>
       <el-table-column prop="primaryCategoryName" label="一级类别"></el-table-column>
       <el-table-column prop="secondaryCategoryName" label="二级类别"></el-table-column>
       <el-table-column prop="member" label="付款人"></el-table-column>
@@ -70,6 +70,7 @@
 }
 .maxWidthArea .totalAmountArea {
   background-color: #fdf6ec;
+  border: 1px solid #e6a23c;
   color: #e6a23c;
   font-size: 15px;
   padding: 8px 10px;

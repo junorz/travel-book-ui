@@ -2,7 +2,7 @@
   <div v-loading="loading" :element-loading-text="loadingText">
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{path: '/'}">首页</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{name: 'travelbook', params: {'url': this.pureUrl}}">账本查看</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{name: 'travelBook', params: {'url': this.pureUrl}}">账本查看</el-breadcrumb-item>
       <el-breadcrumb-item>结算预览</el-breadcrumb-item>
     </el-breadcrumb>
     <el-alert title="此页面为结算预览，进行结算请到管理员页面" type="info" show-icon></el-alert>

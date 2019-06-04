@@ -22,7 +22,7 @@
       <p>请输入密码</p>
       <el-input v-model="adminPassword" show-password></el-input>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary">确认</el-button>
+        <el-button type="primary" @click="login()">确认</el-button>
       </span>
     </el-dialog>
   </el-container>
@@ -37,7 +37,10 @@
 </style>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
+import { post } from "./utils/APIUtil";
+import Consts from "./context/Consts";
+import Types from "./store/types";
 
 export default {
   data: function() {
@@ -50,8 +53,32 @@ export default {
     ...mapState(["bookName", "viewMode", "currentBookId"])
   },
   methods: {
-    openAdmin: function() {}
-  }
+    login: function() {
+      post(
+        Consts.URLs.travelbook.login,
+        {
+          travelBookId: this.currentBookId,
+          password: this.adminPassword
+        },
+        response => {
+          console.log(response.headers);
+          // 把 JWT token 存入 localStorage
+          localStorage.setItem("token", response.data.data);
+          // 跳转页面
+          this.$router.push({
+            name: "admin",
+            params: { url: this.$route.params.url }
+          });
+          this.adminDialogVisible = false;
+          this.adminPassword = "";
+        },
+        err => {
+          this.$alert(err.response.data.message, "验证失败");
+        }
+      );
+    }
+  },
+  ...mapActions([Types.CHANGE_VIEW_MODE])
 };
 </script>
 

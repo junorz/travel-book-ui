@@ -8,9 +8,21 @@ export default {
         frontBase,
         travelbook: {
             create: base + '/create',
+            login: base + '/login',
+        },
+        detail: {
+            base: base + '/details',
+            create: base + '/details/create'
+        },
+        member: {
+            base: base + '/members',
+            create: base + '/members/create'
+        },
+        category: {
+            base: base + '/categories'
         },
         currency: {
-            avaliableList: base + '/currency'
+            base: base + '/currency'
         }
     }
 }

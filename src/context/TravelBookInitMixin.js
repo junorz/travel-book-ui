@@ -17,6 +17,8 @@ export default {
             detailList: [],
             totalAmount: "",
             pureAmount: "",
+            currency: "",
+            categoryList: [],
             calculation: {},
             loading: true,
             loadingText: "账本数据加载中"
@@ -26,7 +28,21 @@ export default {
         initialize: function (url) {
             this.loadingText = "账本数据加载中";
             this.loading = true;
-            this.CHANGE_VIEW_MODE({ viewMode: true });
+            // 切换视图模式
+            switch (this.$route.name) {
+
+                case "travelBook":
+                case "settlePreview":
+                    this.CHANGE_VIEW_MODE({ viewMode: true });
+                    break;
+                case "home":
+                case "admin":
+                    this.CHANGE_VIEW_MODE({ viewMode: false });
+                    break;
+                default:
+                    this.CHANGE_VIEW_MODE({ viewMode: false });
+                    break;
+            }
             // 加载账本数据
             get(
                 Consts.URLs.base + "/" + url,
@@ -48,6 +64,7 @@ export default {
                     this.detailList.forEach(d => {
                         d.dateTime = moment(d.dateTime).format("YYYY/MM/DD");
                     });
+                    this.currency = response.data.data.currency;
                     this.calculation = response.data.data.calculation;
                     this.loading = false;
                     this.CHANGE_CURRENT_BOOK({ currentBookId: response.data.data.id });
@@ -60,6 +77,8 @@ export default {
                     this.CHANGE_CURRENT_BOOK({ currentBookId: "" });
                 }
             );
+            // 加载分类列表
+            get(Consts.URLs.category.base, null, response => this.categoryList = response.data.data);
         },
         ...mapActions([Types.CHANGE_BOOK_NAME, Types.CHANGE_VIEW_MODE, Types.CHANGE_CURRENT_BOOK])
     }, mounted: function () {

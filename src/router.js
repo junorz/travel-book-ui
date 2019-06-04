@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Home from './components/Home'
 import TravelBook from './components/TravelBook'
 import SettlePreview from './components/SettlePreview'
+import Admin from './components/Admin'
 
 Vue.use(Router)
 
@@ -16,13 +17,18 @@ export default new Router({
     },
     {
       path: '/t/:url',
-      name: 'travelbook',
+      name: 'travelBook',
       component: TravelBook
     },
     {
       path: '/t/:url/settlePreview',
       name: 'settlePreview',
       component: SettlePreview
+    },
+    {
+      path: '/t/:url/admin',
+      name: 'admin',
+      component: Admin
     }
     // {
     //   path: '/',

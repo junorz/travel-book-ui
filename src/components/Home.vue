@@ -93,6 +93,7 @@ import { get, post } from "../utils/APIUtil";
 import Consts from "../context/Consts";
 import { mapState, mapActions } from "vuex";
 import Types from "../store/types";
+import { mapToLabelValue } from "../utils/CurrencyUtil";
 
 export default {
   data: function() {
@@ -106,7 +107,7 @@ export default {
         currency: ""
       },
       settingForm: {},
-      currencyList: {},
+      currencyList: [],
       validationMsg: {
         createForm: {
           name: "",
@@ -211,27 +212,10 @@ export default {
   },
   created: function() {
     get(
-      Consts.URLs.currency.avaliableList,
+      Consts.URLs.currency.base,
       null,
       response => {
-        this.currencyList = response.data.data.map(c => {
-          switch (c) {
-            case "CNY":
-              return { label: "人民币", value: "CNY" };
-            case "JPY":
-              return { label: "日元", value: "JPY" };
-            case "USD":
-              return { label: "美元", value: "USD" };
-            case "EUR":
-              return { label: "欧元", value: "EUR" };
-            case "CAD":
-              return { label: "加元", value: "CAD" };
-            case "KRW":
-              return { label: "韩元", value: "KRW" };
-            case "HKD":
-              return { label: "港元", value: "HKD" };
-          }
-        });
+        this.currencyList = response.data.data.map(mapToLabelValue);
       },
       () => {
         this.$notify.error({
