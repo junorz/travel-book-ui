@@ -1,18 +1,20 @@
 import axios from 'axios'
 
-export const get = (url, params, successHandler, errorHandler = () => { }) => {
+export const get = (url, params, successHandler, errorHandler = () => { }, finallyHandler = () => { }) => {
     axios.get(url, { params })
         .then(response => successHandler(response))
-        .catch(error => errorHandler(error));
+        .catch(error => errorHandler(error))
+        .finally(finallyHandler);
 }
 
-export const post = (url, data, successHandler, errorHandler = () => { }) => {
+export const post = (url, data, successHandler, errorHandler = () => { }, finallyHandler = () => { }) => {
     axios.post(url, data)
         .then(response => successHandler(response))
-        .catch(error => errorHandler(error));
+        .catch(error => errorHandler(error))
+        .finally(finallyHandler);
 }
 
-export const authGet = (url, params, successHandler, errorHandler = () => { }) => {
+export const authGet = (url, params, successHandler, errorHandler = () => { }, finallyHandler = () => { }) => {
     axios.get(url, {
         params,
         headers: {
@@ -22,10 +24,11 @@ export const authGet = (url, params, successHandler, errorHandler = () => { }) =
         refreshToken(response);
         successHandler(response);
     })
-        .catch(error => errorHandler(error));
+        .catch(error => errorHandler(error))
+        .finally(finallyHandler);
 }
 
-export const authPost = (url, data, successHandler, errorHandler = () => { }) => {
+export const authPost = (url, data, successHandler, errorHandler = () => { }, finallyHandler = () => { }) => {
     axios.post(url, data, {
         headers: {
             "Authorization": createTokenHeader()
@@ -34,7 +37,8 @@ export const authPost = (url, data, successHandler, errorHandler = () => { }) =>
         refreshToken(response);
         successHandler(response);
     })
-        .catch(error => errorHandler(error));
+        .catch(error => errorHandler(error))
+        .finally(finallyHandler);
 }
 
 

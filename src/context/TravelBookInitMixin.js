@@ -1,7 +1,6 @@
 import { get } from "../utils/APIUtil"
 import { mapState, mapActions } from 'vuex'
 import Types from '../store/types'
-import moment from "moment";
 import Consts from "./Consts"
 
 export default {
@@ -61,9 +60,6 @@ export default {
                         Consts.URLs.frontBase + "/#/t/" + response.data.data.accessUrl;
                     this.memberList = response.data.data.memberList;
                     this.detailList = response.data.data.detailList;
-                    this.detailList.forEach(d => {
-                        d.dateTime = moment(d.dateTime).format("YYYY/MM/DD");
-                    });
                     this.currency = response.data.data.currency;
                     this.calculation = response.data.data.calculation;
                     this.loading = false;

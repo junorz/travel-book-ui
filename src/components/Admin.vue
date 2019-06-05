@@ -84,12 +84,14 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="dateTime" label="日期" min-width="90"></el-table-column>
+      <el-table-column label="日期" min-width="90">
+        <template slot-scope="scope">{{ formatDate(scope.row.dateTime) }}</template>
+      </el-table-column>
       <el-table-column prop="amount" label="金额" min-width="100"></el-table-column>
       <el-table-column prop="remarks" label="消费明细" min-width="150"></el-table-column>
       <el-table-column prop="primaryCategoryName" label="一级类别"></el-table-column>
       <el-table-column prop="secondaryCategoryName" label="二级类别"></el-table-column>
-      <el-table-column prop="member" label="付款人"></el-table-column>
+      <el-table-column prop="member.name" label="付款人"></el-table-column>
       <el-table-column label="付款对象">
         <template slot-scope="scope">
           <el-button size="mini" @click="openPayTarget(scope.row.memberList)">查看</el-button>
@@ -97,7 +99,11 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog id="detailDialog" title="新帐目" :visible.sync="detailDialogVisible">
+    <el-dialog
+      id="detailDialog"
+      :title="detailDialogMode == 'newDetailMode' ? '新项目' : '编辑'"
+      :visible.sync="detailDialogVisible"
+    >
       <el-form ref="detailItem" :model="detailItem" label-position="right" label-width="auto">
         <el-form-item label="金额">
           <el-input v-model="detailItem.amount" type="number"></el-input>
@@ -137,7 +143,7 @@
           <el-select
             v-model="detailItem.primaryCategoryId"
             placeholder="请选择一级类别"
-            @change="setSecondaryList"
+            @change="detailItem.secondaryCategoryId = ''"
           >
             <el-option v-for="c in categoryList" :key="c.id" :label="c.name" :value="c.id"></el-option>
           </el-select>
@@ -170,13 +176,13 @@
         <el-form-item label="日期">
           <el-date-picker v-model="detailItem.dateTime" type="datetime" placeholder="选择日期时间"></el-date-picker>
         </el-form-item>
-        <el-form-item v-if="detailDialogMode == 'newDetailMode'">
-          <el-button type="primary" @click="addNewDetail(false)">提交</el-button>
-          <el-button @click="addNewDetail(true)">继续添加</el-button>
-        </el-form-item>
-        <el-form-item v-if="detailDialogMode == 'editDetailMode'">
-          <el-button type="primary">更新</el-button>
-        </el-form-item>
+        <el-row type="flex" justify="center" v-if="detailDialogMode == 'newDetailMode'">
+          <el-button type="primary" @click="addNewDetail(false)" :loading="buttonLoading">提交</el-button>
+          <el-button @click="addNewDetail(true)" :loading="buttonLoading">继续添加</el-button>
+        </el-row>
+        <el-row type="flex" justify="center" v-if="detailDialogMode == 'editDetailMode'">
+          <el-button type="primary" @click="updateDetail()" :loading="buttonLoading">更新</el-button>
+        </el-row>
       </el-form>
     </el-dialog>
   </div>
@@ -259,6 +265,7 @@ export default {
       detailDialogVisible: false,
       newMemberName: "",
       detailItem: {
+        id: "", // ID只有在编辑模式时使用
         amount: "",
         remarks: "",
         memberId: "",
@@ -273,6 +280,7 @@ export default {
       currencyInfo: "",
       currencyList: [],
       getExchangeRateButton: "获取当前汇率",
+      buttonLoading: false,
       amountInfo: "",
       detailDialogMode: "newDetailMode"
     };
@@ -290,6 +298,13 @@ export default {
         CurrencyUtil.getName(this.currency) +
         "。如果你选择了其他货币类型请指定一个汇率。";
       this.detailItem.currency = this.currency;
+    },
+    "detailItem.primaryCategoryId": function() {
+      this.categoryList.forEach(c => {
+        if (c.id == this.detailItem.primaryCategoryId) {
+          this.secondaryCategoryList = c.secondaryCategoryList;
+        }
+      });
     }
   },
   methods: {
@@ -297,13 +312,14 @@ export default {
       this.detailDialogMode = mode;
       this.detailDialogVisible = true;
       if (mode == "newDetailMode") {
+        this.resetDetailDialog();
         this.detailItem.dateTime = new Date();
       } else if (mode == "editDetailMode") {
-        console.log(data);
+        this.detailItem.id = data.id;
         this.detailItem.amount = data.amount;
         this.detailItem.remarks = data.remarks;
-        this.detailItem.memberId = data.memberId;
-        this.detailItem.memberList = data.memberList;
+        this.detailItem.memberId = data.member.id;
+        this.detailItem.memberList = data.memberList.map(m => m.id);
         this.detailItem.primaryCategoryId = data.primaryCategoryId;
         this.detailItem.secondaryCategoryId = data.secondaryCategoryId;
         this.detailItem.currency = data.currency;
@@ -312,6 +328,7 @@ export default {
       }
     },
     resetDetailDialog: function() {
+      this.detailItem.id = "";
       this.detailItem.amount = "";
       this.detailItem.remarks = "";
       this.detailItem.memberId = "";
@@ -320,7 +337,9 @@ export default {
       this.detailItem.secondaryCategoryId = "";
       this.detailItem.currency = this.currency;
       this.detailItem.exchangeRate = "1.00";
-      this.detailItem.dateTime = new Date();
+    },
+    formatDate: function(dateTime) {
+      return moment(dateTime).format("YYYY/MM/DD");
     },
     copySuccess: function() {
       this.$message({
@@ -340,7 +359,7 @@ export default {
       return colors[randomInt];
     },
     openPayTarget: function(data) {
-      this.$alert(data.join(", "), "付款对象");
+      this.$alert(data.map(d => d.name).join(", "), "付款对象");
     },
     settlePreview: function() {
       this.$router.push({
@@ -419,19 +438,12 @@ export default {
         }
       );
     },
-    setSecondaryList: function(selectedId) {
-      this.detailItem.secondaryCategoryId = "";
-      this.categoryList.forEach(c => {
-        if (c.id == selectedId) {
-          this.secondaryCategoryList = c.secondaryCategoryList;
-        }
-      });
-    },
     setAmountInfo: function() {
       this.amountInfo =
         "金额处请填写" + CurrencyUtil.getName(this.detailItem.currency) + "。";
     },
     addNewDetail: function(isContinue) {
+      this.buttonLoading = true;
       authPost(
         Consts.URLs.detail.create,
         {
@@ -465,6 +477,9 @@ export default {
           } else {
             this.$message.error(err.response.data.message);
           }
+        },
+        () => {
+          this.buttonLoading = false;
         }
       );
     },
@@ -484,6 +499,46 @@ export default {
           );
         })
         .catch(() => {});
+    },
+    updateDetail: function() {
+      this.buttonLoading = true;
+      authPost(
+        Consts.URLs.detail.base + "/" + this.detailItem.id + "/edit",
+        {
+          travelBookId: this.travelBookId,
+          memberId: this.detailItem.memberId,
+          memberList:
+            this.detailItem.memberList.length == 0
+              ? this.memberList.map(m => m.id)
+              : this.detailItem.memberList,
+          primaryCategoryId: this.detailItem.primaryCategoryId,
+          secondaryCategoryId: this.detailItem.secondaryCategoryId,
+          amount: this.detailItem.amount,
+          currency: this.detailItem.currency,
+          exchangeRate: this.detailItem.exchangeRate,
+          dateTime: moment.utc(this.detailItem.dateTime).unix(),
+          remarks: this.detailItem.remarks
+        },
+        () => {
+          this.detailDialogVisible = false;
+          this.resetDetailDialog();
+          this.$message.success("更新成功");
+          this.initialize(this.pureUrl);
+        },
+        err => {
+          if (
+            err.response.data.data != null &&
+            Array.isArray(err.response.data.data)
+          ) {
+            this.$message.error(err.response.data.data[0]["errorMessage"]);
+          } else {
+            this.$message.error(err.response.data.message);
+          }
+        },
+        () => {
+          this.buttonLoading = false;
+        }
+      );
     }
   },
   mounted: function() {

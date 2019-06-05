@@ -141,6 +141,10 @@ export default {
           this.createForm,
           response => {
             console.log(response);
+            this.$router.push({
+              name: "travelBook",
+              params: { url: response.data.data.accessUrl }
+            });
           },
           err => {
             // 处理后端错误消息
