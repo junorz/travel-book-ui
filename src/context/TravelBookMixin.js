@@ -1,7 +1,8 @@
-import { get } from "../utils/APIUtil"
+import { get } from '../utils/APIUtil'
 import { mapState, mapActions } from 'vuex'
 import Types from '../store/types'
-import Consts from "./Consts"
+import Consts from './Consts'
+import moment from 'moment'
 
 export default {
     computed: {
@@ -75,6 +76,35 @@ export default {
             );
             // 加载分类列表
             get(Consts.URLs.category.base, null, response => this.categoryList = response.data.data);
+        },
+        formatDate: function (dateTime) {
+            return moment(dateTime).format("YYYY/MM/DD");
+        },
+        copySuccess: function() {
+            this.$message({
+              message: "复制链接成功",
+              type: "success"
+            });
+        },
+        copyFailed: function() {
+            this.$message({
+              message: "复制链接失败",
+              type: "error"
+            });
+        },
+        randomColor: function() {
+            const colors = ["", "success", "info", "warning", "danger"];
+            const randomInt = Math.floor(Math.random() * Math.floor(colors.length));
+            return colors[randomInt];
+        },
+        openPayTarget: function(data) {
+            this.$alert(data.map(d => d.name).join(", "), "付款对象");
+        },
+        settlePreview: function() {
+            this.$router.push({
+              name: "settlePreview",
+              params: { url: this.pureUrl }
+            });
         },
         ...mapActions([Types.CHANGE_BOOK_NAME, Types.CHANGE_VIEW_MODE, Types.CHANGE_CURRENT_BOOK])
     }, mounted: function () {

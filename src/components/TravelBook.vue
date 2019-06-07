@@ -43,12 +43,14 @@
       </el-collapse>
     </el-row>
     <el-table :data="detailList" stripe border style="width: 100%" size="medium" ref="dataTable">
-      <el-table-column prop="dateTime" label="日期" min-width="90"></el-table-column>
+      <el-table-column label="日期" min-width="90">
+        <template slot-scope="scope">{{ formatDate(scope.row.dateTime) }}</template>
+      </el-table-column>
       <el-table-column prop="amount" label="金额" min-width="100"></el-table-column>
       <el-table-column prop="remarks" label="消费明细" min-width="150"></el-table-column>
       <el-table-column prop="primaryCategoryName" label="一级类别"></el-table-column>
       <el-table-column prop="secondaryCategoryName" label="二级类别"></el-table-column>
-      <el-table-column prop="member" label="付款人"></el-table-column>
+      <el-table-column prop="member.name" label="付款人"></el-table-column>
       <el-table-column label="付款对象">
         <template slot-scope="scope">
           <el-button size="mini" @click="openPayTarget(scope.row.memberList)">查看</el-button>
@@ -100,42 +102,15 @@
 </style>
 
 <script>
-import TravelBookInitMixin from "../context/TravelBookInitMixin";
+import TravelBookMixin from "../context/TravelBookMixin";
 
 export default {
-  mixins: [TravelBookInitMixin],
+  mixins: [TravelBookMixin],
   data: function() {
     return {};
   },
   computed: {},
-  methods: {
-    copySuccess: function() {
-      this.$message({
-        message: "复制链接成功",
-        type: "success"
-      });
-    },
-    copyFailed: function() {
-      this.$message({
-        message: "复制链接失败",
-        type: "error"
-      });
-    },
-    randomColor: function() {
-      let colors = ["", "success", "info", "warning", "danger"];
-      let randomInt = Math.floor(Math.random() * Math.floor(colors.length));
-      return colors[randomInt];
-    },
-    openPayTarget: function(data) {
-      this.$alert(data.join(", "), "付款对象");
-    },
-    settlePreview: function() {
-      this.$router.push({
-        name: "settlePreview",
-        params: { url: this.pureUrl }
-      });
-    }
-  }
+  methods: {}
 };
 </script>
 

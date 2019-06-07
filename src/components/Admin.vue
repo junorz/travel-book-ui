@@ -252,14 +252,14 @@
 </style>
 
 <script>
-import TravelBookInitMixin from "../context/TravelBookInitMixin";
+import TravelBookMixin from "../context/TravelBookMixin";
 import { get, authPost } from "../utils/APIUtil";
 import Consts from "../context/Consts";
 import * as CurrencyUtil from "../utils/CurrencyUtil";
 import moment from "moment";
 
 export default {
-  mixins: [TravelBookInitMixin],
+  mixins: [TravelBookMixin],
   data: function() {
     return {
       detailDialogVisible: false,
@@ -313,7 +313,7 @@ export default {
       this.detailDialogVisible = true;
       if (mode == "newDetailMode") {
         this.resetDetailDialog();
-        this.detailItem.dateTime = new Date();
+        this.detailItem.dateTime = moment().format();
       } else if (mode == "editDetailMode") {
         this.detailItem.id = data.id;
         this.detailItem.amount = data.amount;
@@ -337,35 +337,6 @@ export default {
       this.detailItem.secondaryCategoryId = "";
       this.detailItem.currency = this.currency;
       this.detailItem.exchangeRate = "1.00";
-    },
-    formatDate: function(dateTime) {
-      return moment(dateTime).format("YYYY/MM/DD");
-    },
-    copySuccess: function() {
-      this.$message({
-        message: "复制链接成功",
-        type: "success"
-      });
-    },
-    copyFailed: function() {
-      this.$message({
-        message: "复制链接失败",
-        type: "error"
-      });
-    },
-    randomColor: function() {
-      const colors = ["", "success", "info", "warning", "danger"];
-      const randomInt = Math.floor(Math.random() * Math.floor(colors.length));
-      return colors[randomInt];
-    },
-    openPayTarget: function(data) {
-      this.$alert(data.map(d => d.name).join(", "), "付款对象");
-    },
-    settlePreview: function() {
-      this.$router.push({
-        name: "settlePreview",
-        params: { url: this.pureUrl }
-      });
     },
     addMember: function() {
       authPost(

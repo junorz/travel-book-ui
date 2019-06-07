@@ -45,10 +45,10 @@
 </style>
 
 <script>
-import TravelBookInitMixin from "../context/TravelBookInitMixin";
+import TravelBookMixin from "../context/TravelBookMixin";
 
 export default {
-  mixins: [TravelBookInitMixin],
+  mixins: [TravelBookMixin],
   data: function() {
     return {};
   },
