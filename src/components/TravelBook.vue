@@ -12,7 +12,9 @@
         </div>
       </div>
       <div class="buttonArea">
-        <el-button size="small" @click="settlePreview()">结算预览</el-button>
+        <el-button size="small" @click="settlePreview()">
+          <i class="el-icon-document-checked"></i>&nbsp;结算预览
+        </el-button>
       </div>
     </el-row>
     <el-row id="urlInput" type="flex" justify="space-between">
@@ -26,7 +28,9 @@
           v-clipboard:copy="accessUrl"
           v-clipboard:success="copySuccess"
           v-clipboard:error="copyFailed"
-        >复制链接</el-button>
+        >
+          <i class="el-icon-copy-document"></i>&nbsp;复制链接
+        </el-button>
         <!-- <el-button type="success" size="mini">分享到微信</el-button> -->
       </div>
     </el-row>

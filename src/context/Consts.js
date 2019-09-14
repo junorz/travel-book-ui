@@ -2,7 +2,7 @@ const base = 'http://localhost:8080/api/travelbooks';
 const frontBase = 'http://localhost:8081';
 
 export default {
-    appName: "TBook",
+    appName: "旅行账本",
     URLs: {
         base,
         frontBase,

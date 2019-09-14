@@ -9,7 +9,7 @@
     </el-row>
     <el-row>
       <el-col>
-        <el-button>
+        <el-button @click="navToUserGuide()">
           <i class="el-icon-question"></i>&nbsp;使用帮助
         </el-button>
       </el-col>
@@ -207,6 +207,9 @@ export default {
       }
 
       return result;
+    },
+    navToUserGuide: function () {
+      this.$router.push('help');
     },
     ...mapActions([
       Types.CHANGE_BOOK_NAME,

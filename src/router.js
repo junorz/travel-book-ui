@@ -5,6 +5,7 @@ import Home from './components/Home'
 import TravelBook from './components/TravelBook'
 import SettlePreview from './components/SettlePreview'
 import Admin from './components/Admin'
+import Help from './components/Help'
 
 Vue.use(Router)
 
@@ -29,6 +30,11 @@ export default new Router({
       path: '/t/:url/admin',
       name: 'admin',
       component: Admin
+    },
+    {
+      path: "/help",
+      name: "help",
+      component: Help
     }
     // {
     //   path: '/',

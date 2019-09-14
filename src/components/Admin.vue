@@ -23,7 +23,7 @@
       </div>
       <div class="buttonArea">
         <el-button size="small" @click="settlePreview()">
-          <i class="el-icon-document-checked"></i>&nbsp;结算
+          <i class="el-icon-document-checked"></i>&nbsp;结算预览
         </el-button>
       </div>
     </el-row>

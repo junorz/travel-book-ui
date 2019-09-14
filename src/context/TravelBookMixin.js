@@ -30,9 +30,9 @@ export default {
             this.loading = true;
             // 切换视图模式
             switch (this.$route.name) {
-
                 case "travelBook":
                 case "settlePreview":
+                case "help":
                     this.CHANGE_VIEW_MODE({ viewMode: true });
                     break;
                 case "home":

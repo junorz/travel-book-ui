@@ -5,7 +5,7 @@
       <el-breadcrumb-item :to="{name: 'travelBook', params: {'url': this.pureUrl}}">账本查看</el-breadcrumb-item>
       <el-breadcrumb-item>结算预览(BETA)</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-alert title="此页面为结算预览，进行结算请到管理员页面" type="info" show-icon></el-alert>
+    <!-- <el-alert title="此页面为结算预览，进行结算请到管理员页面" type="info" show-icon></el-alert> -->
 
     <el-row :gutter="12" style="display: flex; flex-wrap: wrap;">
       <el-col
