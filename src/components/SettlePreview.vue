@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="loading" :element-loading-text="loadingText">
+  <div v-loading="loading" :element-loading-text="loadingText" style="min-height: 300px;">
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{path: '/'}">首页</el-breadcrumb-item>
       <el-breadcrumb-item :to="{name: 'travelBook', params: {'url': this.pureUrl}}">账本查看</el-breadcrumb-item>
